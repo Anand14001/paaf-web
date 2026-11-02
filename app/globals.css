@@ -1,0 +1,537 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Design tokens — PAAF botanical system.
+
+   Brand (Q17): golden yellow is the anchor accent, carried on a deep
+   botanical forest ground with sage support and warm neutrals. Every text pairing below is measured against WCAG
+   AA (4.5:1 body / 3:1 large); ratios are noted beside each token.
+
+   Type: Playfair Display for display, Inter for everything else.
+   --------------------------------------------------------------- */
+@theme {
+  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+
+  /* --- Anchor: deep forest ------------------------------------ */
+  --color-forest-900: #122a1e;   /* 14.2:1 on ivory — headings, dark fills */
+  --color-forest-700: #1e4530;   /* 10.0:1 on ivory — primary buttons      */
+  --color-forest-600: #27543b;   /* inset panels on dark (8.7:1 vs white)  */
+  --color-forest-500: #2f6b47;   /* links, icons, category fills           */
+
+  /* --- Accent: golden yellow ---------------------------------- */
+  --color-gold-500: #e0a82e;     /* surfaces only — 2.0:1 on ivory, never text */
+  --color-gold-600: #b07c10;     /* hover / borders                        */
+  --color-gold-700: #7e6210;     /* gold AS TEXT on light — 5.4:1 on ivory */
+  --color-gold-100: #f6e3b4;     /* tints, row stripes                     */
+  --color-gold-50:  #fdf6e6;     /* section wash                           */
+
+  /* --- Support: sage ------------------------------------------ */
+  --color-sage-400: #9cae7f;     /* tertiary action — 6.4:1 vs forest-900  */
+  --color-sage-300: #b9cdbc;     /* idle link on forest — 6.4:1            */
+  --color-sage-200: #cbe0ce;     /* active link on forest — 7.7:1          */
+  --color-sage-100: #e4e9d8;     /* secondary section background           */
+
+  /* --- Warm neutrals ------------------------------------------ */
+  --color-ivory: #faf6ef;        /* page background                        */
+  --color-bone:  #f2ebde;        /* cards, input fills                     */
+  --color-ink:   #2b2a26;        /* body text — 13.3:1 on ivory            */
+  --color-muted: #6a6659;        /* captions — 5.3:1 ivory / 4.8:1 bone    */
+  --color-border: #d8cfbe;       /* hairlines (non-text)                   */
+  --color-border-strong: #c4b79f;/* inputs, focus rings (non-text)         */
+
+  /* --- Single spice ------------------------------------------- */
+  --color-terracotta: #8c3b1e;   /* 7.1:1 on ivory — one role only         */
+
+  /* --- Semantic aliases (kept so intent reads at the call site) */
+  --color-primary: #1e4530;      /* = forest-700 */
+  --color-accent: #e0a82e;       /* = gold-500   */
+
+  /* Desktop type scale */
+  --text-fs-10: 10px;
+  --text-fs-12: 12px;
+  --text-fs-18: 1.125rem;
+  --text-fs-20: 1.25rem;
+  --text-fs-30: 1.875rem;
+  --text-fs-42: 2.625rem;
+  --text-fs-60: 3.75rem;
+  --text-fs-68: 4.25rem;
+  --text-fs-90: 5.625rem;
+  --text-fs-100: 6.25rem;
+
+  /* Mobile type scale (≤991px) */
+  --text-m-14: 0.875rem;
+  --text-m-16: 1rem;
+  --text-m-18: 1.125rem;
+  --text-m-22: 1.375rem;
+  --text-m-34: 2.125rem;
+  --text-m-42: 2.625rem;
+  --text-m-46: 2.875rem;
+
+  /* Spacing + gaps */
+  --spacing-s30: 30px;
+  --spacing-s50: 50px;
+  --spacing-s60: 60px;
+  --spacing-s100: 100px;
+  --spacing-gap40: 40px;
+  --spacing-gap50: 50px;
+  --spacing-gap60: 60px;
+
+  /* Radius */
+  --radius-xs: 2px;
+  --radius-l: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-16: 1rem;
+  --radius-20: 1.25rem;
+  --radius-24: 1.5rem;
+  --radius-30: 1.875rem;
+  --radius-40: 2.5rem;
+  --radius-60: 3.75rem;
+  --radius-100: 6.25rem;
+  --radius-200: 12.5rem;
+
+  --container-site: 1200px;
+}
+
+@layer base {
+  * { min-width: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 1.125rem;          /* 18px */
+    line-height: 1;
+    color: var(--color-ink);
+    background-color: var(--color-ivory);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Playfair ships 400-900 with no light weight, so display sizes take
+     400 and small headings 500 to keep the thin strokes from breaking
+     up. Leading is tightened to 106%: at 120% Playfair's small x-height
+     opens the lines into stripes. */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 400;
+    font-optical-sizing: auto;
+    line-height: 106%;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--color-forest-900);
+  }
+
+  h4, h5, h6 {
+    font-weight: 500;
+    line-height: 118%;
+    letter-spacing: -0.01em;
+  }
+
+  h1 { font-size: var(--text-fs-90); }   /* 90px */
+  h2 { font-size: var(--text-fs-68); }   /* 68px */
+  h3 { font-size: var(--text-fs-60); }   /* 60px */
+  h4 { font-size: var(--text-fs-42); }   /* 42px */
+  h5 { font-size: var(--text-fs-30); }   /* 30px */
+  h6 { font-size: var(--text-fs-20); }   /* 20px */
+
+  @media screen and (max-width: 991px) {
+    h1 { font-size: var(--text-m-46); }  /* 46px */
+    h2 { font-size: var(--text-m-42); }  /* 42px */
+    h3 { font-size: var(--text-m-34); }  /* 34px */
+    h4 { font-size: var(--text-m-22); }  /* 22px */
+    h5 { font-size: var(--text-m-18); }  /* 18px */
+    h6 { font-size: var(--text-m-16); }  /* 16px */
+    /* Playfair carries normal leading again once it is under ~46px */
+    h1, h2, h3 { line-height: 112%; }
+  }
+
+  p {
+    margin: 0;
+    line-height: 150%;
+    letter-spacing: -0.01em;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* Form controls and tables stay on Inter, never the display face */
+  input, select, textarea, button, table { font-family: var(--font-sans); }
+}
+
+/* ---------------------------------------------------------------
+   Content rails.
+
+   A hard 1200px cap leaves ~360px of dead margin each side on a
+   1920px display, which reads as a narrow column stranded in the
+   middle of the screen. The rail instead steps up with the viewport
+   while still capping line length — unbounded full-bleed would push
+   body copy past a readable measure.
+
+   Everything on the site is laid out through .rail / .rail-wide, so
+   these four variables control the whole page width.
+   --------------------------------------------------------------- */
+:root {
+  --rail-max: 1200px;
+  --rail-wide-max: 1440px;
+  --rail-gutter: 20px;
+  --section-y: 60px;
+}
+@media (min-width: 992px) {
+  :root { --rail-gutter: 30px; --section-y: 100px; }
+}
+@media (min-width: 1280px) {
+  :root { --rail-max: 1296px; --rail-wide-max: 1500px; }
+}
+@media (min-width: 1536px) {
+  :root { --rail-max: 1416px; --rail-wide-max: 1660px; --rail-gutter: 40px; --section-y: 112px; }
+}
+@media (min-width: 1800px) {
+  :root { --rail-max: 1560px; --rail-wide-max: 1800px; --rail-gutter: 48px; --section-y: 128px; }
+}
+@media (min-width: 2200px) {
+  :root { --rail-max: 1680px; --rail-wide-max: 1960px; }
+}
+
+@layer components {
+  .rail {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--rail-max);
+    padding-inline: var(--rail-gutter);
+  }
+
+  /* Header and footer run wider than the content rail */
+  .rail-wide {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--rail-wide-max);
+    padding-inline: var(--rail-gutter);
+  }
+
+  /* Section rhythm scales with the rail so vertical and horizontal
+     breathing room stay in proportion on large displays. */
+  .section {
+    padding-block: var(--section-y);
+  }
+
+  /* Display classes mirroring h1-h6, for when the tag is wrong */
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 106%;
+    letter-spacing: -0.015em;
+  }
+  .h4, .h5, .h6 { font-weight: 500; line-height: 118%; letter-spacing: -0.01em; }
+
+  .h1 { font-size: var(--text-fs-90); }
+  .h2 { font-size: var(--text-fs-68); }
+  .h3 { font-size: var(--text-fs-60); }
+  .h4 { font-size: var(--text-fs-42); }
+  .h5 { font-size: var(--text-fs-30); }
+  .h6 { font-size: var(--text-fs-20); }
+
+  @media screen and (max-width: 991px) {
+    .h1 { font-size: var(--text-m-46); }
+    .h2 { font-size: var(--text-m-42); }
+    .h3 { font-size: var(--text-m-34); }
+    .h4 { font-size: var(--text-m-22); }
+    .h5 { font-size: var(--text-m-18); }
+    .h6 { font-size: var(--text-m-16); }
+    .h1, .h2, .h3 { line-height: 112%; }
+  }
+
+  .hairline { @apply border-border; }
+
+  /* Large stat numerals — Playfair lining figures read as heritage */
+  .stat {
+    font-family: var(--font-display);
+    font-size: var(--text-fs-68);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums;
+  }
+  @media screen and (max-width: 991px) {
+    .stat { font-size: var(--text-m-42); }
+  }
+
+  /* Inter 600, wide tracking — the only uppercase in the system */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--text-fs-12);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* CAS numbers, volumes, spec tables — columns must line up */
+  .spec {
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+/* Pill buttons — Inter 600, 12.5rem radius. Gold carries forest-900
+   text (7.1:1) and never white, which would sit at 1.9:1. */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2.5 rounded-[12.5rem]
+         px-[30px] py-[17px] text-[1rem] font-semibold leading-none tracking-[0.02em]
+         transition-all duration-300 ease-out cursor-pointer
+         focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-gold-600;
+}
+@utility btn-primary { @apply btn bg-forest-700 text-white hover:bg-forest-900; }
+/* Hover darkens to gold-700, not gold-600: white on gold-600 is only
+   3.66:1, and a 16px/600 button is not "large text" under WCAG. */
+@utility btn-accent  { @apply btn bg-gold-500 text-forest-900 hover:bg-gold-700 hover:text-white; }
+@utility btn-sage    { @apply btn bg-sage-400 text-forest-900 hover:brightness-95; }
+@utility btn-green   { @apply btn bg-sage-400 text-forest-900 hover:brightness-95; }
+@utility btn-ghost   { @apply btn border border-border-strong text-forest-900 hover:bg-bone; }
+@utility btn-light   { @apply btn bg-white text-forest-700 hover:bg-bone; }
+
+@utility arrow-shift {
+  & svg { transition: transform 0.3s ease; }
+  &:hover svg { transform: translateX(4px); }
+}
+
+/* Same idea for a CTA carrying the diagonal arrow: the nudge follows
+   where the glyph points, so the arrow travels along its own axis
+   instead of sliding sideways out from under itself. */
+@utility arrow-shift-diag {
+  & svg { transition: transform 0.3s ease; }
+  &:hover svg { transform: translate(3px, -3px); }
+}
+
+/* ---------------------------------------------------------------
+   PAAF additions — forms, tables, utilities.
+   --------------------------------------------------------------- */
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold-700);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  /* Skip link — visible only on keyboard focus */
+  .skip-link {
+    @apply absolute left-4 z-[100] -translate-y-24 rounded-md bg-forest-900 px-4 py-3
+           text-sm font-semibold text-white transition-transform focus:translate-y-4;
+  }
+
+  /* Form controls. 16px minimum on mobile prevents iOS zoom-on-focus. */
+  .field-label {
+    @apply mb-1.5 block text-[0.8125rem] font-semibold tracking-[0.01em] text-forest-900;
+  }
+  .field-input {
+    @apply w-full rounded-xl border border-border-strong bg-white px-4 py-3 text-base
+           text-ink placeholder:text-muted transition-colors
+           focus:border-forest-500 focus:outline-none focus:ring-2 focus:ring-forest-500/25
+           disabled:cursor-not-allowed disabled:bg-bone;
+  }
+  .field-input[aria-invalid="true"] {
+    @apply border-terracotta focus:border-terracotta focus:ring-terracotta/25;
+  }
+  .field-error {
+    @apply mt-1.5 flex items-start gap-1.5 text-[0.8125rem] font-medium text-terracotta;
+  }
+  .field-hint { @apply mt-1.5 text-[0.8125rem] leading-snug text-muted; }
+
+  /* Specification tables — tabular figures so CAS columns align */
+  .spec-table { @apply w-full border-collapse text-left; }
+  .spec-table th {
+    @apply w-[42%] border-b border-border py-3 pr-4 align-top text-[0.8125rem]
+           font-semibold uppercase tracking-[0.08em] text-muted;
+  }
+  .spec-table td {
+    @apply border-b border-border py-3 align-top text-[0.9375rem] leading-relaxed text-ink;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Long-form copy */
+  .prose-paaf { @apply space-y-4 text-[1.0625rem] leading-[1.7] text-ink; }
+  .prose-paaf strong { @apply font-semibold text-forest-900; }
+
+  .card {
+    @apply rounded-24 border border-border bg-white transition-all duration-300;
+  }
+  .card-hover { @apply hover:-translate-y-1 hover:border-border-strong hover:shadow-lg; }
+}
+
+/* ---------------------------------------------------------------
+   Curve layout helpers.
+
+   The arcs themselves are SVG (see the Curve component in
+   components/ui.tsx). These are only the positioning and clearance
+   rules the sections need around them.
+
+   The previous mask-based implementation was removed: a
+   radial-gradient mask is an ellipse, so beyond its width the strip
+   stayed fully opaque and the arc ended in a vertical step.
+   --------------------------------------------------------------- */
+@layer components {
+  /* Sections that carry a curve need room for it and a stacking ctx */
+  .has-curve { position: relative; }
+  .curve-pad-b { padding-bottom: 110px; }
+  .curve-pad-t { padding-top: 110px; }
+  @media screen and (max-width: 991px) {
+    .curve-pad-b { padding-bottom: 80px; }
+    .curve-pad-t { padding-top: 80px; }
+  }
+
+  /* Mega-menu panel */
+  .mega-panel {
+    @apply overflow-hidden rounded-30 border border-border bg-white shadow-2xl;
+    animation: mega-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes mega-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mega-panel { animation: none; }
+  }
+
+  .mega-tile {
+    @apply flex gap-4 rounded-20 p-4 transition-colors duration-200 hover:bg-gold-50;
+  }
+  .mega-icon {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl
+           bg-sage-100 text-forest-700 transition-colors duration-200;
+  }
+  .mega-tile:hover .mega-icon { @apply bg-gold-500 text-forest-900; }
+
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+
+  /* -- Ring carousel (homepage process section) ------------------
+     Card positions come from the generated slot table in
+     ProcessScatter.tsx as four custom properties each. This file
+     only decides how big the ring is and what happens when there is
+     no room for it, so the geometry is authored once and never
+     duplicated across breakpoints.
+
+     The stage does NOT get a fixed height. The copy sits in normal
+     flow in the middle and the padding either side is what makes
+     room for the cards at the top and bottom of the circle, so the
+     stage grows with its own text. The card positions are
+     percentages of that height, so the ring opens out by exactly as
+     much as the copy pushes it apart. Pinning a height instead
+     means every heading rewrite is a chance for the arrows to land
+     on top of the card above them. */
+
+  .scatter-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Room for the cards at 12 and 6 o'clock. Derived, not picked:
+       the top card reaches 170px above its centre at 14.5% of the
+       height, so clearing it needs padding > 170 + 0.145 x height.
+       Tilting the side cards grew their boxes to 433px and pushed
+       the ring open (see RY in ProcessScatter), which is why this is
+       larger than the upright version needed. */
+    padding-block: 460px;
+    min-height: 1200px;
+    /* The cards at 3 and 9 o'clock run past the edge on purpose. */
+    overflow: hidden;
+    /* The cards carry z-index up to 60. Without a stacking context
+       of its own those values compete with the sticky header (z-50)
+       and the ring scrolls OVER the nav. Isolating keeps them local. */
+    isolation: isolate;
+    --scatter-scale: 1;
+  }
+
+  .scatter-card {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: calc(var(--w) * var(--scatter-scale));
+    height: calc(var(--h) * var(--scatter-scale));
+    transform: translate(-50%, -50%) rotate(var(--rot));
+    border-radius: var(--radius-24);
+    /* Backstop for the counter-rotated copy: a title longer than the
+       ones in content/process.ts gets cut at the card edge rather
+       than hanging off the photograph into the background. */
+    overflow: hidden;
+    transition:
+      left 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      top 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      width 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      height 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* The hole in the middle of the ring. Its width is what keeps the
+     copy clear of the cards at 3 and 9 o'clock, so it tightens as
+     the viewport narrows and the ring closes in. */
+  .scatter-center {
+    position: relative;
+    z-index: 50;
+    width: min(100%, 24rem);
+  }
+  @media screen and (min-width: 1100px) {
+    .scatter-center { width: min(100%, 30rem); }
+  }
+  @media screen and (min-width: 1340px) {
+    .scatter-center { width: min(100%, 34rem); }
+  }
+
+  .scatter-arrow {
+    @apply flex h-12 w-12 items-center justify-center rounded-full bg-white
+           text-forest-900 transition-colors duration-200 hover:bg-gold-500
+           focus-visible:outline-2 focus-visible:outline-offset-2
+           focus-visible:outline-gold-500;
+  }
+
+  /* Scaled down below 1340px: at full size the 45deg cards close in
+     on the copy in the middle. */
+  @media screen and (max-width: 1339px) {
+    .scatter-stage {
+      padding-block: 390px;
+      min-height: 1080px;
+      --scatter-scale: 0.86;
+    }
+  }
+
+  /* Below 1024px the ring unwinds into a column: one card, the
+     arrows, then the copy. A circle of rotated cards needs width
+     that is not there, and the hole in the middle would be narrower
+     than the heading. */
+  @media screen and (max-width: 1023px) {
+    .scatter-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-block: 0;
+      min-height: 0;
+      overflow: visible;
+    }
+    .scatter-card[data-active="false"] { display: none; }
+    .scatter-card[data-active="true"] {
+      position: relative;
+      left: auto;
+      top: auto;
+      width: min(74vw, 290px);
+      height: min(98vw, 386px);
+      transform: none;
+    }
+    .scatter-center {
+      width: 100%;
+      margin-top: 2.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scatter-card { transition-duration: 1ms; }
+  }
+}
