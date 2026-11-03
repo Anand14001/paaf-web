@@ -3,11 +3,9 @@ import PrefilledEnquiryForm from "@/components/forms/PrefilledEnquiryForm";
 import {
   Breadcrumb,
   Icon,
-  Photo,
   Rail,
   Section,
 } from "@/components/ui";
-import { SECTION_IMAGES, photo } from "@/lib/images";
 import { getProductIndex } from "@/lib/products";
 import { IS_MOCK_MODE } from "@/lib/api/client";
 import { JsonLd, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -103,15 +101,6 @@ export default async function ContactPage() {
                   </span>
                 </p>
               </div>
-            </div>
-
-            <div className="overflow-hidden rounded-30 border border-border">
-              <Photo
-                src={photo(SECTION_IMAGES.location.id, 800)}
-                alt={SECTION_IMAGES.location.alt}
-                sizes="(max-width: 1024px) 100vw, 30vw"
-                className="aspect-[4/3] w-full"
-              />
             </div>
 
             <div className="rounded-30 border border-border bg-bone p-7">

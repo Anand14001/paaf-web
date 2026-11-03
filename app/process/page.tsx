@@ -119,7 +119,8 @@ export default function ProcessPage() {
       </Section>
 
       {/* -- Infrastructure -- */}
-      <Section tone="forest">
+      {/* id is the anchor the footer's "Infrastructure" link targets. */}
+      <Section id="infrastructure" tone="forest">
         <Rail>
           <SectionHeading
             onDark

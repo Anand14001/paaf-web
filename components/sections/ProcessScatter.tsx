@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Icon, Photo, SectionHeading, cx } from "@/components/ui";
 import { processStages } from "@/content/process";
 import { photo, processImage } from "@/lib/images";
+import { useRingGesture } from "@/lib/use-ring-gesture";
 
 /* ---------------------------------------------------------------
    The six-stage protocol as a ring of cards around the copy.
@@ -122,14 +123,19 @@ export default function ProcessScatter() {
     [],
   );
 
+  const stageRef = useRef<HTMLDivElement>(null);
+  const gesture = useRingGesture(stageRef, go);
+
   const stage = processStages[active];
 
   return (
     <div
+      ref={stageRef}
       className="scatter-stage"
       role="group"
       aria-roledescription="carousel"
       aria-label="The Six-Stage Extraction Protocol"
+      {...gesture}
       onKeyDown={(e) => {
         if (e.key === "ArrowLeft") {
           e.preventDefault();

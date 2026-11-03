@@ -97,7 +97,8 @@ export default function QualityDocumentsPage() {
       </Section>
 
       {/* -- Certifications: honest state -- */}
-      <Section>
+      {/* id is the anchor the footer's "Certifications" link targets. */}
+      <Section id="certifications">
         <Rail>
           <div className="max-w-3xl">
             <SectionHeading

@@ -21,18 +21,19 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
      buyers will open on a phone in a warehouse. Pointer devices get
      the smoothing; touch keeps its native physics.
 
-   · `anchors.offset` matches `scroll-padding-top` in globals.css. The
-     header floats over the content, so an un-offset anchor lands the
-     heading underneath it. The two numbers must move together.
+   · `anchors.offset` is 0, and that is measured rather than assumed.
+     The floating header's clearance already comes from
+     `scroll-padding-top` in globals.css, which is honoured before
+     Lenis animates. Setting the offset to -96 to "match" it
+     double-counted: a same-page anchor landed 192px down instead of
+     96. Zero here means Lenis glides to the same place the native
+     behaviour would have jumped to.
 
    · Reduced motion turns the smoothing off rather than unmounting
      Lenis. Unmounting would swap the tree and remount every client
      component below it; this keeps anchor handling and loses only the
      easing, which is the part that causes the problem.
    --------------------------------------------------------------- */
-
-/** Clearance for the floating header. Mirrors `scroll-padding-top`. */
-const HEADER_OFFSET = 96;
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   const reduced = usePrefersReducedMotion();
@@ -45,7 +46,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       lerp: reduced ? 1 : 0.12,
       smoothWheel: !reduced,
       syncTouch: false,
-      anchors: { offset: -HEADER_OFFSET, duration: reduced ? 0 : undefined },
+      anchors: { offset: 0, duration: reduced ? 0 : undefined },
       autoRaf: true,
     }),
     [reduced],

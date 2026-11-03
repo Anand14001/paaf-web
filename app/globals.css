@@ -503,6 +503,10 @@
     min-height: 1560px;
     /* The cards at 3 and 9 o'clock run past the edge on purpose. */
     overflow: hidden;
+    /* Horizontal gestures come to the ring, vertical ones still
+       scroll the page. Without this a sideways swipe on a phone is
+       swallowed by the scroller and the cards never move. */
+    touch-action: pan-y;
     /* The cards carry z-index up to 60. Without a stacking context
        of its own those values compete with the sticky header (z-50)
        and the ring scrolls OVER the nav. Isolating keeps them local. */
