@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BrandLockup, Icon, cx } from "@/components/ui";
@@ -31,6 +32,7 @@ const CLOSE_DELAY = 180;
 
 export default function Header() {
   const pathname = usePathname();
+  const lenis = useLenis();
   const [openId, setOpenId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>("products");
@@ -90,11 +92,20 @@ export default function Header() {
   }, [openId]);
 
   useEffect(() => {
+    /* Two locks, because they stop different things. `overflow`
+       handles native scroll and is the fallback when Lenis is not
+       running; `lenis.stop()` halts the virtual scroll, which keeps
+       consuming wheel events regardless of what overflow says. With
+       only the first, the page slides about behind the open sheet. */
     document.body.style.overflow = mobileOpen ? "hidden" : "";
+    if (mobileOpen) lenis?.stop();
+    else lenis?.start();
+
     return () => {
       document.body.style.overflow = "";
+      lenis?.start();
     };
-  }, [mobileOpen]);
+  }, [mobileOpen, lenis]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -108,10 +119,12 @@ export default function Header() {
 
   /* Traceability sits at top level rather than inside a panel: it is
      the differentiator this whole site is built on, and burying a
-     differentiator one hop deep wastes it. */
+     differentiator one hop deep wastes it. The catalogue is NOT here —
+     it lives in the Products panel with the other catalogue route, so
+     the two are found in the same place. `menuActive` below already
+     lights Products for /catalogue. */
   const flatLinks = [
     { label: "Traceability", href: "/traceability" },
-    { label: "Catalogue", href: "/catalogue" },
     { label: "Contact", href: "/contact" },
   ];
 

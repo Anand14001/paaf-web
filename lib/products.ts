@@ -1,10 +1,11 @@
 import "server-only";
 
-import concretesAbsolutes from "@/content/products/concretes-absolutes";
+import solventExtracted from "@/content/products/solvent-extracted";
 import essentialOils from "@/content/products/essential-oils";
 import {
   APPLICATION_LABELS,
   CATEGORY_LABELS,
+  CATEGORY_PATHS,
   EXTRACTION_LABELS,
   FORM_LABELS,
   type ProductIndexEntry,
@@ -30,12 +31,13 @@ import {
 export {
   APPLICATION_LABELS,
   CATEGORY_LABELS,
+  CATEGORY_PATHS,
   EXTRACTION_LABELS,
   FORM_LABELS,
 } from "@/lib/labels";
 export type { ProductIndexEntry } from "@/lib/labels";
 
-const RAW: Product[] = [...concretesAbsolutes, ...essentialOils];
+const RAW: Product[] = [...solventExtracted, ...essentialOils];
 
 /* Validate once, at module load, so `next build` fails on bad data
    rather than rendering a half-empty product page. */

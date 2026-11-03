@@ -76,9 +76,14 @@ export const productNav: { heading: string; links: NavLink[] }[] = [
     heading: "Browse by category",
     links: [
       {
-        label: "Concretes & Absolutes",
-        href: "/products/concretes-absolutes",
-        description: "14 solvent-extracted florals",
+        label: "Concretes",
+        href: "/products/concretes",
+        description: "7 solvent-extracted floral concretes",
+      },
+      {
+        label: "Absolutes",
+        href: "/products/absolutes",
+        description: "7 alcohol-washed absolutes",
       },
       {
         label: "Essential Oils",
@@ -136,9 +141,15 @@ export const megaMenus: MegaMenu[] = [
     label: "Products",
     tiles: [
       {
-        label: "Concretes & Absolutes",
-        href: "/products/concretes-absolutes",
-        description: "14 solvent-extracted florals — jasmine, tuberose, rose and champaca",
+        label: "Concretes",
+        href: "/products/concretes",
+        description: "7 floral concretes — jasmine, tuberose, champaca and lotus",
+        icon: "leaf",
+      },
+      {
+        label: "Absolutes",
+        href: "/products/absolutes",
+        description: "7 absolutes — rose, mimosa, tobacco flower and vanilla",
         icon: "leaf",
       },
       {
@@ -152,6 +163,14 @@ export const megaMenus: MegaMenu[] = [
         href: "/products",
         description: "All 31 products, filterable by form, method and application",
         icon: "search",
+      },
+      {
+        /* Named as the footer names it. "Catalogue" alone sat next to
+           "Full catalogue" and the two were indistinguishable. */
+        label: "Printable catalogue",
+        href: "/catalogue",
+        description: "Every product with its specification, on one printable page",
+        icon: "download",
       },
       {
         label: "Request a sample",
@@ -223,7 +242,8 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
   {
     heading: "Products",
     links: [
-      { label: "Concretes & Absolutes", href: "/products/concretes-absolutes" },
+      { label: "Concretes", href: "/products/concretes" },
+      { label: "Absolutes", href: "/products/absolutes" },
       { label: "Essential Oils", href: "/products/essential-oils" },
       { label: "Full catalogue", href: "/products" },
       { label: "Printable catalogue", href: "/catalogue" },

@@ -11,8 +11,18 @@ import type { Application, Category, Form } from "@/lib/schema";
    --------------------------------------------------------------- */
 
 export const CATEGORY_LABELS: Record<Category, string> = {
-  "concrete-absolute": "Concretes & Absolutes",
+  concrete: "Concretes",
+  absolute: "Absolutes",
   "essential-oil": "Essential Oils",
+};
+
+/** Where each category lives. One map rather than a ternary per
+    call site: with two categories a ternary was fine, with three it
+    is a bug waiting for the fourth. */
+export const CATEGORY_PATHS: Record<Category, string> = {
+  concrete: "/products/concretes",
+  absolute: "/products/absolutes",
+  "essential-oil": "/products/essential-oils",
 };
 
 export const FORM_LABELS: Record<Form, string> = {

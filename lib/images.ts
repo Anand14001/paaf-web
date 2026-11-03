@@ -17,6 +17,7 @@
    reads through this module.
    --------------------------------------------------------------- */
 
+import type { Category } from "@/lib/schema";
 import heroJpg from "@/public/img/hero.jpg";
 
 const U = "https://images.unsplash.com/photo-";
@@ -79,7 +80,9 @@ export const SECTION_IMAGES = {
   },
   packing: {
     id: "1608037222022-62649819f8aa",
-    alt: "Amber bottles of finished aromatic oil prepared for dispatch",
+    /* Alt corrected to the frame: the photo is a processing rig with
+       amber distillate running through it, not bottles on a bench. */
+    alt: "Amber distillate running through a processing rig",
   },
   location: {
     id: "1587316830182-59ca6817ce72",
@@ -151,11 +154,15 @@ const PRODUCT_IMAGES: Record<string, Img> = {
   valerian: { id: "1602928299025-47892a76808a", alt: "Valerian root prepared for distillation" },
 };
 
-const FALLBACK: Record<string, Img> = {
-  "concrete-absolute": SECTION_IMAGES.categoryFloral,
+/* Keyed by Category, not string: as a loose Record this silently
+   fell through to the hero image when the categories were split,
+   because nothing type-checked the keys. */
+const FALLBACK: Record<Category, Img> = {
+  concrete: SECTION_IMAGES.categoryFloral,
+  absolute: SECTION_IMAGES.categoryFloral,
   "essential-oil": SECTION_IMAGES.categoryOil,
 };
 
-export function productImage(slug: string, category: string): Img {
+export function productImage(slug: string, category: Category): Img {
   return PRODUCT_IMAGES[slug] ?? FALLBACK[category] ?? SECTION_IMAGES.hero;
 }

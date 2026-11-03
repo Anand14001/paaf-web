@@ -27,7 +27,7 @@ const trail = [
 export const metadata = pageMetadata({
   title: "Full Product Catalogue — 31 Natural Aromatic Ingredients",
   description:
-    "PAAF's complete catalogue: 14 concretes and absolutes, 17 essential oils, with botanical names, CAS numbers, odour profiles and applications. Free, no form.",
+    "PAAF's complete catalogue: 7 floral concretes, 7 absolutes and 17 essential oils, with botanical names, CAS numbers, odour profiles and applications. Free, no form.",
   path: "/catalogue",
 });
 
@@ -100,8 +100,9 @@ function Table({ title, items }: { title: string; items: Product[] }) {
 }
 
 export default async function CataloguePage() {
-  const [florals, oils] = await Promise.all([
-    getProductsByCategory("concrete-absolute"),
+  const [concretes, absolutes, oils] = await Promise.all([
+    getProductsByCategory("concrete"),
+    getProductsByCategory("absolute"),
     getProductsByCategory("essential-oil"),
   ]);
 
@@ -118,7 +119,8 @@ export default async function CataloguePage() {
           <div className="max-w-2xl">
             <h1 className="h3">Product catalogue</h1>
             <p className="mt-4 leading-relaxed text-muted">
-              {florals.length + oils.length} natural aromatic ingredients from Nilakottai,
+              {concretes.length + absolutes.length + oils.length} natural aromatic
+              ingredients from Nilakottai,
               Tamil Nadu. All prices on application. Batch-specific Certificates of Analysis
               issued with every order.
             </p>
@@ -138,7 +140,8 @@ export default async function CataloguePage() {
           </div>
         </header>
 
-        <Table title={CATEGORY_LABELS["concrete-absolute"]} items={florals} />
+        <Table title={CATEGORY_LABELS.concrete} items={concretes} />
+        <Table title={CATEGORY_LABELS.absolute} items={absolutes} />
         <Table title={CATEGORY_LABELS["essential-oil"]} items={oils} />
 
         <footer className="mt-14 border-t border-border pt-7 text-[0.8125rem] leading-relaxed text-muted">

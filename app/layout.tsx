@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
+import SmoothScroll from "@/components/providers/SmoothScroll";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -67,14 +68,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body>
+        {/* Reveal-on-scroll hides its content until JavaScript marks
+            it in, so without JS the page would render blank. This
+            puts it back. It must be in <head>-order before paint,
+            which in the App Router means first thing in <body>. */}
+        <noscript>
+          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+
         <a href="#main" className="skip-link">
           Skip to content
         </a>
         <JsonLd data={organizationJsonLd()} />
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-        <WhatsAppFloat />
+
+        {/* Wraps the whole chrome, not just the page: the header
+            calls useLenis() to freeze the page behind the mobile
+            sheet, and that needs to be inside the provider. */}
+        <SmoothScroll>
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+          <WhatsAppFloat />
+        </SmoothScroll>
       </body>
     </html>
   );

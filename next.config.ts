@@ -14,6 +14,20 @@ const nextConfig: NextConfig = {
     qualities: [55, 62, 75],
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
   },
+  /* The combined Concretes & Absolutes page is gone — the two are
+     separate categories now. The URL was in the sitemap at priority
+     0.9, so it redirects rather than 404s for anything that already
+     holds the link. Absolutes is the target because it is where the
+     page's best-known materials (rose, vanilla, mimosa) now live. */
+  async redirects() {
+    return [
+      {
+        source: "/products/concretes-absolutes",
+        destination: "/products/absolutes",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

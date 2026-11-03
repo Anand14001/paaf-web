@@ -39,7 +39,7 @@ type Slot = {
 const COUNT = processStages.length;
 
 /** Ellipse radii as a percentage of the stage box. */
-const RX = 44;
+const RX = 48;
 /* RY is solved, not chosen. Two constraints pull against each other
    once the side cards are tilted:
 
@@ -50,16 +50,22 @@ const RX = 44;
        bottom, which wants them close to the middle — clearance there
        is (50 - RY)% of the height, less half a card.
 
-   A 272x340 card turned 45deg occupies a 433px box (w·cos45 +
-   h·sin45), so the side pair needs ~463px of separation and the top
-   card needs ~190px of room. Setting those two equal gives RY ≈ 35.5
-   at the smallest stage that satisfies both. Raise the card size and
-   this number has to be re-solved. */
+   A 330x412 card turned 45deg occupies a 525px box (w·cos45 +
+   h·sin45), so the side pair needs ~555px of separation and the top
+   card needs ~226px of room. Setting those two equal gives RY ≈ 35.5
+   at the smallest stage that satisfies both, and a stage ~1560px
+   tall — which is where the padding in globals.css comes from.
+
+   RY lands near 35.5 for any card size, because both constraints
+   scale with the card; RX does not. Growing the card from 272 to 330
+   widened its tilted box by 92px and closed the gap to the copy in
+   the middle to 14px, so RX went 44 -> 48 to push the side pair back
+   out. Change the card size and re-solve BOTH, not just this one. */
 const RY = 35.5;
 
 /** One card. Every position on the ring uses it — same box, same
     copy, same treatment; only where it sits and how it leans. */
-const CARD = { w: 272, h: 340 };
+const CARD = { w: 330, h: 412 };
 
 /* The four side cards lean into a cross; the cards at 12 and 6
    o'clock stay upright. The copy leans WITH the card rather than
@@ -68,18 +74,42 @@ const CARD = { w: 272, h: 340 };
    version used a smaller inset block before. Same card, same layout,
    leaning: the trade is that the side cards' text reads on the
    diagonal. */
+/* Rounded, and that is load-bearing rather than tidiness: the spec
+   does not require Math.sin and Math.cos to be bit-identical across
+   engines, so Node and V8-in-the-browser can disagree in the last
+   digit. Those values go out as inline custom properties, which
+   makes the difference a hydration mismatch React reports and
+   refuses to patch. Three decimals is 0.001% of the stage — about
+   1/60th of a pixel — so nothing moves. */
+const round = (n: number) => Number(n.toFixed(3));
+
 const SLOTS: Slot[] = Array.from({ length: COUNT }, (_, slot) => {
   const theta = (slot / COUNT) * 2 * Math.PI; // 0 = top, clockwise
-  const x = 50 + RX * Math.sin(theta);
+  const x = round(50 + RX * Math.sin(theta));
+  const y = round(50 - RY * Math.cos(theta));
   const upright = slot === 0 || slot === COUNT / 2;
+
+  /* Each tilted card leans along its own radius: the long axis
+     points out from the middle of the ring, rounded to the nearest
+     45deg. Mirroring on the vertical axis alone was not enough —
+     it made the lower pair lean back in towards the centre, so the
+     four tilted cards read as two parallel pairs instead of as a
+     rosette. Quadrant-aware, they all splay outward: the upper pair
+     up and away, the lower pair down and away.
+
+     The sign falls out of which quadrant the slot is in. Same side
+     of both axes (top-left, bottom-right) leans one way; opposite
+     sides (top-right, bottom-left) lean the other. */
+  const rot = upright ? 0 : (x < 50) === (y < 50) ? -45 : 45;
 
   return {
     x,
-    y: 50 - RY * Math.cos(theta),
-    /* Mirrored across the vertical axis so the two sides read as a
-       pair rather than as a rotation anyone has to decode. */
-    rot: upright ? 0 : x < 50 ? -45 : 45,
+    y,
+    rot,
     ...CARD,
+    /* No geometry to re-solve for this: +45 and -45 produce the
+       same bounding box, so every clearance worked out for the ring
+       still holds. */
     z: slot === 0 ? 60 : 40,
   };
 });
@@ -132,7 +162,7 @@ export default function ProcessScatter() {
             <Photo
               src={photo(img.id, 700)}
               alt={img.alt}
-              sizes="(max-width: 767px) 80vw, 300px"
+              sizes="(max-width: 1023px) 85vw, 360px"
               rounded="rounded-24"
               overlay="none"
               className="absolute inset-0 h-full w-full"
@@ -164,17 +194,17 @@ export default function ProcessScatter() {
                 says which one is current. */}
             <span
               aria-hidden
-              className="absolute right-4 top-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-gold-500 font-display text-[1.125rem] leading-none text-forest-900"
+              className="absolute right-5 top-5 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-gold-500 font-display text-[1.3125rem] leading-none text-forest-900"
             >
               {s.number}
             </span>
 
-            <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
+            <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-6">
               <p className="eyebrow text-gold-500">{s.badge}</p>
-              <h3 className="mt-2 font-display text-[1.25rem] leading-[1.18] tracking-[-0.01em] text-white">
+              <h3 className="mt-2.5 font-display text-[1.4375rem] leading-[1.16] tracking-[-0.01em] text-white">
                 {s.title}
               </h3>
-              <p className="mt-2.5 line-clamp-4 text-[0.8125rem] leading-[1.5] text-sage-200">
+              <p className="mt-3 line-clamp-5 text-[0.875rem] leading-[1.5] text-sage-200">
                 {s.body}
               </p>
             </div>

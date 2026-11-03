@@ -19,6 +19,7 @@ import { processStages } from "@/content/process";
 import {
   APPLICATION_LABELS,
   CATEGORY_LABELS,
+  CATEGORY_PATHS,
   EXTRACTION_LABELS,
   getAllSlugs,
   getProduct,
@@ -76,10 +77,7 @@ export default async function ProductPage({
     .map((r) => index.find((i) => i.slug === r.slug))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
-  const categoryPath =
-    product.category === "concrete-absolute"
-      ? "/products/concretes-absolutes"
-      : "/products/essential-oils";
+  const categoryPath = CATEGORY_PATHS[product.category];
 
   const trail = [
     { name: "Home", path: "/" },
@@ -109,7 +107,7 @@ export default async function ProductPage({
                 alt={heroImg.alt}
                 sizes="(max-width: 1024px) 100vw, 55vw"
                 priority
-                tone={product.category === "concrete-absolute" ? "forest" : "sage"}
+                tone={product.category === "essential-oil" ? "sage" : "forest"}
                 rounded="rounded-40"
                 className="aspect-[4/3] w-full"
               />

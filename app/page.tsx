@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Reveal from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 import ProcessScatter from "@/components/sections/ProcessScatter";
 import {
@@ -13,6 +14,7 @@ import {
 import { LOCAL_IMAGES, SECTION_IMAGES, photo } from "@/lib/images";
 import {
   CATEGORY_LABELS,
+  CATEGORY_PATHS,
   getFeaturedProducts,
   getProductIndex,
   getProductsByCategory,
@@ -33,10 +35,11 @@ function pick<T extends { slug: string }>(pool: T[], slugs: string[]): T[] {
 }
 
 export default async function HomePage() {
-  const [featured, index, florals, oils] = await Promise.all([
+  const [featured, index, concretes, absolutes, oils] = await Promise.all([
     getFeaturedProducts(),
     getProductIndex(),
-    getProductsByCategory("concrete-absolute"),
+    getProductsByCategory("concrete"),
+    getProductsByCategory("absolute"),
     getProductsByCategory("essential-oil"),
   ]);
 
@@ -188,8 +191,14 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-11 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredIndex.map((p) => (
-              <ProductCard key={p.slug} product={p} />
+            {featuredIndex.map((p, i) => (
+              /* Stagger is per row, not per card: 3 across on lg, so
+                 the delay resets every third one. A flat i * 70 would
+                 leave the last card of a six-card grid waiting a third
+                 of a second after the first, which reads as lag. */
+              <Reveal key={p.slug} delay={(i % 3) * 70} className="h-full">
+                <ProductCard product={p} />
+              </Reveal>
             ))}
           </div>
         </Rail>
@@ -205,143 +214,157 @@ export default async function HomePage() {
             lede="Delicate florals and heat-stable aromatic crops need fundamentally different treatment, so they run on separate dedicated lines."
           />
 
-          {/* Text sits on a solid surface, not on the photograph.
+          {/* Three signposts, one system.
 
-              Overlaying body copy on an image means contrast depends
-              on whichever photo happens to be in the slot — and these
-              get replaced with the client's own farm photography,
-              which we cannot art-direct in advance. A split card keeps
-              every word legible no matter what lands above it. */}
-          <div className="mt-11 grid gap-7 lg:grid-cols-2">
+              Text sits on a solid surface, never over the photograph:
+              contrast would otherwise depend on whichever image lands
+              in the slot, and these get replaced with the client's own
+              farm photography that we cannot art-direct in advance.
+
+              Two rules keep the three reading as a set rather than as
+              three unrelated cards:
+
+              · the lede is clamped to three lines AND floored at three
+                lines, so the divider under it lands on the same
+                baseline in all three whatever the copy length;
+              · the CTA is pushed down with `mt-auto`, so it sits on a
+                common baseline however the chips above it wrap.
+
+              The per-category selling points that used to sit here
+              were cut, not lost — CategoryLanding already renders them
+              on each destination page, and they were most of the card
+              height. A signpost says what the thing is and proves it
+              with examples; the argument belongs on the page it points
+              to. */}
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {[
               {
-                href: "/products/concretes-absolutes",
-                label: CATEGORY_LABELS["concrete-absolute"],
-                count: florals.length,
+                href: CATEGORY_PATHS.concrete,
+                label: CATEGORY_LABELS.concrete,
+                count: concretes.length,
                 method: "Solvent extraction",
                 body:
-                  "Delicate florals cannot be steam distilled — heat destroys the very compounds worth having. Ours are washed with food-grade solvent at controlled low temperature to yield concrete, then alcohol-washed and chilled for the absolute.",
-                points: [
-                  "Picked before sunrise, extracted the same morning",
-                  "Supplied as concrete or absolute",
-                  "Food-grade SS extractors, controlled low temperature",
-                ],
-                highlights: pick(florals, [
+                  "Washed with food-grade solvent at controlled low temperature, so the aromatic oil comes back still held in the plant's own waxes.",
+                highlights: pick(concretes, [
                   "jasmine-sambac",
                   "jasmine-grandiflorum",
                   "tuberose",
                   "champaca",
-                  "indian-rose-centifolia",
                 ]),
                 img: SECTION_IMAGES.categoryFloral,
                 accent: "gold" as const,
               },
               {
-                href: "/products/essential-oils",
+                href: CATEGORY_PATHS.absolute,
+                label: CATEGORY_LABELS.absolute,
+                count: absolutes.length,
+                method: "Solvent extraction",
+                body:
+                  "The concrete taken a stage further — waxes washed out with alcohol and chilled away, leaving the soluble aromatic fraction.",
+                highlights: pick(absolutes, [
+                  "indian-rose-centifolia",
+                  "rose-edward",
+                  "mimosa",
+                  "vanilla",
+                ]),
+                img: SECTION_IMAGES.packing,
+                accent: "gold" as const,
+              },
+              {
+                href: CATEGORY_PATHS["essential-oil"],
                 label: CATEGORY_LABELS["essential-oil"],
                 count: oils.length,
                 method: "Steam distillation",
                 body:
-                  "Aromatic crops, roots and spices run on a dedicated second line. Low-pressure steam lifts the volatile fraction without thermal scorch, followed by cooling and Florentine flask gravity separation.",
-                points: [
-                  "Grasses cut and charged the same day",
-                  "Long, gentle cycles for root materials",
-                  "Governing assay stated on every Certificate of Analysis",
-                ],
+                  "Low-pressure steam lifts the volatile fraction from crops, roots and spices without thermal scorch, on a dedicated second line.",
                 highlights: pick(oils, [
                   "vetiver",
                   "cypriol-nagarmotha",
                   "cardamom",
-                  "black-pepper",
                   "lemongrass",
                 ]),
                 img: SECTION_IMAGES.categoryOil,
                 accent: "sage" as const,
               },
-            ].map((c) => (
-              <article
-                key={c.href}
-                className="group flex flex-col overflow-hidden rounded-40 border border-border bg-white transition-all duration-500 hover:-translate-y-1 hover:border-border-strong hover:shadow-xl"
-              >
-                {/* -- Image panel: carries the method badge only -- */}
-                <div className="relative">
-                  <Photo
-                    src={photo(c.img.id, 1200)}
-                    alt={c.img.alt}
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    tone={c.accent === "gold" ? "forest" : "sage"}
-                    className="aspect-[16/9] w-full"
-                    imgClassName="transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-forest-900 shadow-sm backdrop-blur">
-                    <Icon
-                      name={c.accent === "gold" ? "leaf" : "flask"}
-                      size={14}
-                      className="text-gold-700"
-                    />
-                    {c.method}
-                  </span>
-                </div>
+            ].map((c, i) => {
+              /* Derived, not hard-coded to the slice length: a category
+                 holding fewer highlights than the slice would otherwise
+                 render a wrong, or negative, "+N more". */
+              const chips = c.highlights.slice(0, 4);
+              const remaining = c.count - chips.length;
 
-                {/* -- Content on a solid surface -- */}
-                <div className="flex flex-1 flex-col p-7 lg:p-9">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <h3 className="font-display text-[1.875rem] leading-tight tracking-tight text-forest-900 lg:text-[2.125rem]">
-                      {c.label}
-                    </h3>
-                    <span className="spec shrink-0 rounded-full bg-bone px-3 py-1 text-[0.8125rem] font-semibold text-gold-700">
-                      {c.count} products
+              return (
+                <Reveal key={c.href} delay={i * 90} className="h-full">
+                <article
+                  className="group flex h-full flex-col overflow-hidden rounded-30 border border-border bg-white transition-all duration-500 hover:-translate-y-1 hover:border-border-strong hover:shadow-xl"
+                >
+                  <div className="relative">
+                    <Photo
+                      src={photo(c.img.id, 900)}
+                      alt={c.img.alt}
+                      sizes="(max-width: 1024px) 100vw, 33vw"
+                      tone={c.accent === "gold" ? "forest" : "sage"}
+                      className="aspect-[16/10] w-full"
+                      imgClassName="transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-forest-900 shadow-sm backdrop-blur">
+                      <Icon
+                        name={c.accent === "gold" ? "leaf" : "flask"}
+                        size={13}
+                        className="text-gold-700"
+                      />
+                      {c.method}
                     </span>
                   </div>
 
-                  <p className="mt-4 leading-relaxed text-muted">{c.body}</p>
+                  <div className="flex flex-1 flex-col p-6 lg:p-7">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <h3 className="font-display text-[1.5rem] leading-tight tracking-tight text-forest-900 lg:text-[1.625rem]">
+                        {c.label}
+                      </h3>
+                      <span className="spec shrink-0 rounded-full bg-bone px-2.5 py-1 text-[0.75rem] font-semibold text-gold-700">
+                        {c.count}
+                      </span>
+                    </div>
 
-                  <ul className="mt-6 space-y-2.5 border-t border-border pt-6">
-                    {c.points.map((pt) => (
-                      <li key={pt} className="flex items-start gap-3">
-                        <Icon
-                          name="check"
-                          size={17}
-                          className="mt-1 shrink-0 text-gold-700"
-                        />
-                        <span className="text-[0.9375rem] leading-relaxed text-ink">
-                          {pt}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
+                    {/* Clamped and floored at three lines — see above. */}
+                    <p className="mt-3 line-clamp-3 min-h-[4.5rem] text-[0.9375rem] leading-relaxed text-muted">
+                      {c.body}
+                    </p>
 
-                  <div className="mt-6">
-                    <p className="eyebrow mb-3 text-muted">Includes</p>
-                    <ul className="flex flex-wrap gap-2">
-                      {c.highlights.slice(0, 5).map((p) => (
-                        <li key={p.slug}>
-                          <Link
-                            href={`/products/${p.slug}`}
-                            className="inline-block rounded-full border border-border bg-bone px-3 py-1.5 text-[0.8125rem] font-medium text-forest-900 transition-colors hover:border-forest-500 hover:bg-white hover:text-gold-700"
-                          >
-                            {p.commonName}
-                          </Link>
-                        </li>
-                      ))}
-                      <li>
-                        <span className="inline-block px-1 py-1.5 text-[0.8125rem] text-muted">
-                          +{c.count - 5} more
-                        </span>
-                      </li>
-                    </ul>
+                    <div className="mt-5 border-t border-border pt-5">
+                      <p className="eyebrow mb-3 text-muted">Includes</p>
+                      <ul className="flex flex-wrap gap-2">
+                        {chips.map((p) => (
+                          <li key={p.slug}>
+                            <Link
+                              href={`/products/${p.slug}`}
+                              className="inline-block rounded-full border border-border bg-bone px-3 py-1.5 text-[0.8125rem] font-medium text-forest-900 transition-colors hover:border-forest-500 hover:bg-white hover:text-gold-700"
+                            >
+                              {p.commonName}
+                            </Link>
+                          </li>
+                        ))}
+                        {remaining > 0 && (
+                          <li className="flex items-center px-1 text-[0.8125rem] text-muted">
+                            +{remaining} more
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+
+                    <Link
+                      href={c.href}
+                      className="arrow-shift-diag mt-auto inline-flex items-center gap-2 self-start border-b-2 border-gold-500 pb-1 pt-7 font-semibold text-forest-700 transition-colors hover:text-gold-700"
+                    >
+                      Browse {c.label.toLowerCase()}
+                      <Icon name="arrow-up-right" size={17} />
+                    </Link>
                   </div>
-
-                  <Link
-                    href={c.href}
-                    className="arrow-shift-diag mt-8 inline-flex items-center gap-2 self-start border-b-2 border-gold-500 pb-1 font-semibold text-forest-700 transition-colors hover:text-gold-700"
-                  >
-                    Browse {c.label.toLowerCase()}
-                    <Icon name="arrow-up-right" size={17} />
-                  </Link>
-                </div>
-              </article>
-            ))}
+                </article>
+                </Reveal>
+              );
+            })}
           </div>
         </Rail>
 

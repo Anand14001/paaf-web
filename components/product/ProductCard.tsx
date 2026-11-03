@@ -16,7 +16,11 @@ export default function ProductCard({
   onToggle?: (slug: string) => void;
   className?: string;
 }) {
-  const isFloral = product.category === "concrete-absolute";
+  /* Both solvent-extracted categories share the gold badge; the oils
+     keep sage. Written as "not an oil" so a future solvent-extracted
+     category inherits the right tone instead of silently falling to
+     the oil styling. */
+  const isFloral = product.category !== "essential-oil";
   const img = productImage(product.slug, product.category);
 
   return (

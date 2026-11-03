@@ -31,7 +31,7 @@ export default async function ProductsPage() {
           <div className="mt-8 max-w-3xl">
             <h1 className="h2">The catalogue</h1>
             <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
-              Fourteen concretes and absolutes, seventeen essential oils. Search by common
+              Seven concretes, seven absolutes and seventeen essential oils. Search by common
               name, botanical name or CAS number, and filter down to exactly the material
               you need. Prices are on application.
             </p>

@@ -13,7 +13,7 @@ import { z } from "zod";
    claims") enforced mechanically instead of by discipline.
    --------------------------------------------------------------- */
 
-export const CATEGORIES = ["concrete-absolute", "essential-oil"] as const;
+export const CATEGORIES = ["concrete", "absolute", "essential-oil"] as const;
 export const FORMS = ["concrete", "absolute", "oil"] as const;
 export const EXTRACTION_METHODS = ["solvent-extraction", "steam-distillation"] as const;
 export const APPLICATIONS = ["fragrance", "flavour", "cosmetics", "aromatherapy"] as const;

@@ -2,17 +2,23 @@ import type { Product } from "@/lib/schema";
 import { floral, NILAKOTTAI, TAMIL_NADU } from "./_shared";
 
 /* =============================================================
-   CONCRETES & ABSOLUTES — 14
+   SOLVENT-EXTRACTED — 14
+
+   One file, two catalogue categories. Every material here is
+   solvent extracted, which is what they have in common and what
+   this file is named for; `category` then places each one under
+   Concretes or Absolutes. Do not rename this file after either
+   category — it holds both.
    ============================================================= */
 
-const concretesAbsolutes: Product[] = [
+const solventExtracted: Product[] = [
   floral({
     slug: "jasmine-sambac",
     commonName: "Jasmine Sambac",
     tamilName: "மல்லிகை",
     botanicalName: "Jasminum sambac",
     casNumber: ["91770-14-8"],
-    category: "concrete-absolute",
+    category: "concrete",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened flowers",
@@ -52,7 +58,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "பிச்சிப்பூ / ஜாதிமல்லி",
     botanicalName: "Jasminum grandiflorum",
     casNumber: ["8022-96-6"],
-    category: "concrete-absolute",
+    category: "concrete",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened flowers",
@@ -91,7 +97,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "முல்லை",
     botanicalName: "Jasminum auriculatum",
     casNumber: ["90045-94-6"],
-    category: "concrete-absolute",
+    category: "concrete",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened flowers",
@@ -128,7 +134,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "சம்பங்கி",
     botanicalName: "Polianthes tuberosa",
     casNumber: ["8024-05-3"],
-    category: "concrete-absolute",
+    category: "concrete",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened flowers",
@@ -167,7 +173,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "செண்பகம் / செண்பகப்பூ",
     botanicalName: "Michelia champaca",
     casNumber: ["94333-99-0"],
-    category: "concrete-absolute",
+    category: "concrete",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened flowers (yellow and red varieties)",
@@ -204,7 +210,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "பெருங்கள்ளி / அரளிப்பூ",
     botanicalName: "Plumeria alba",
     casNumber: ["94350-02-4"],
-    category: "concrete-absolute",
+    category: "concrete",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened flowers",
@@ -241,7 +247,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "தாமரை",
     botanicalName: "Nelumbo nucifera",
     casNumber: ["85085-51-4"],
-    category: "concrete-absolute",
+    category: "concrete",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened flowers (pink and white varieties)",
@@ -278,7 +284,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "மிமோசா",
     botanicalName: "Acacia mearnsii",
     casNumber: ["8031-03-6"],
-    category: "concrete-absolute",
+    category: "absolute",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Flowers and flowering twig ends",
@@ -314,7 +320,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "இந்திய ரோஜா",
     botanicalName: "Rosa centifolia",
     casNumber: ["84604-12-6"],
-    category: "concrete-absolute",
+    category: "absolute",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened petals",
@@ -350,7 +356,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "எட்வர்ட் ரோஜா",
     botanicalName: "Rosa bourboniana",
     casNumber: ["97660-07-6"],
-    category: "concrete-absolute",
+    category: "absolute",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Freshly opened petals",
@@ -387,7 +393,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "புகையிலைப் பூ",
     botanicalName: "Nicotiana tabacum",
     casNumber: ["8037-19-2"],
-    category: "concrete-absolute",
+    category: "absolute",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Flowers",
@@ -423,7 +429,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "சாமந்திப்பூ",
     botanicalName: "Chrysanthemum morifolium",
     casNumber: ["1174331-46-4"],
-    category: "concrete-absolute",
+    category: "absolute",
     availableForms: ["concrete", "absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Flower heads",
@@ -460,7 +466,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "வெந்தயம்",
     botanicalName: "Trigonella foenum-graecum",
     casNumber: ["84625-40-1"],
-    category: "concrete-absolute",
+    category: "absolute",
     availableForms: ["absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Seeds",
@@ -496,7 +502,7 @@ const concretesAbsolutes: Product[] = [
     tamilName: "வெண்ணிலா",
     botanicalName: "Vanilla planifolia",
     casNumber: ["8024-06-4"],
-    category: "concrete-absolute",
+    category: "absolute",
     availableForms: ["absolute"],
     extractionMethod: "solvent-extraction",
     plantPart: "Cured beans",
@@ -527,4 +533,4 @@ const concretesAbsolutes: Product[] = [
   }),
 ];
 
-export default concretesAbsolutes;
+export default solventExtracted;

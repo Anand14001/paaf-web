@@ -306,7 +306,15 @@
    PAAF additions — forms, tables, utilities.
    --------------------------------------------------------------- */
 @layer base {
+  /* `scroll-behavior: smooth` is the no-JS and reduced-motion path.
+     Once Lenis is running it adds its own class to <html>, and two
+     smooth-scroll implementations fighting over the same scroll
+     produces a visible stutter on every anchor jump — so the native
+     one stands down. `scroll-padding-top` stays either way: it is
+     what keeps a jumped-to heading clear of the floating header, and
+     Lenis mirrors the same number in `anchors.offset`. */
   html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  html.lenis { scroll-behavior: auto; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after {
@@ -410,6 +418,57 @@
   }
   .mega-tile:hover .mega-icon { @apply bg-gold-500 text-forest-900; }
 
+  /* -- Lenis ------------------------------------------------------
+     Vendored from lenis/dist/lenis.css rather than imported, so the
+     scroll rules sit in the same cascade layer as everything else
+     here and cannot be re-ordered by an import. Keep in step with
+     the package on upgrade. */
+
+  html.lenis,
+  html.lenis body { height: auto; }
+
+  .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+
+  /* Opt a scrollable panel out of the virtual scroll. */
+  .lenis [data-lenis-prevent],
+  .lenis [data-lenis-prevent-wheel],
+  .lenis [data-lenis-prevent-touch] { overscroll-behavior: contain; }
+
+  /* An iframe swallows wheel events and desyncs the virtual scroll. */
+  .lenis.lenis-smooth iframe { pointer-events: none; }
+
+  /* -- Reveal on scroll -------------------------------------------
+     The hidden state has to be authored here for the transition to
+     have somewhere to start, which means content is invisible until
+     JS marks it in. layout.tsx carries a <noscript> override, and
+     reduced motion resets it below — without that reset the opacity
+     would stick at 0 and the page would read as blank. */
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* Only promote what is still waiting; a finished reveal holding a
+     compositor layer for the rest of the session is pure cost. */
+  .reveal[data-reveal="out"] { will-change: opacity, transform; }
+  .reveal[data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal[data-reveal="out"] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
   .scrollbar-none { scrollbar-width: none; }
   .scrollbar-none::-webkit-scrollbar { display: none; }
 
@@ -435,13 +494,13 @@
     align-items: center;
     justify-content: center;
     /* Room for the cards at 12 and 6 o'clock. Derived, not picked:
-       the top card reaches 170px above its centre at 14.5% of the
-       height, so clearing it needs padding > 170 + 0.145 x height.
-       Tilting the side cards grew their boxes to 433px and pushed
-       the ring open (see RY in ProcessScatter), which is why this is
-       larger than the upright version needed. */
-    padding-block: 460px;
-    min-height: 1200px;
+       the top card reaches 206px above its centre at 14.5% of the
+       height, so clearing it needs padding > 206 + 0.145 x height.
+       Solved against the side-pair separation in ProcessScatter,
+       a 330x412 card needs a stage ~1560px tall; these numbers give
+       it ~1620 with the copy at its usual length. */
+    padding-block: 600px;
+    min-height: 1560px;
     /* The cards at 3 and 9 o'clock run past the edge on purpose. */
     overflow: hidden;
     /* The cards carry z-index up to 60. Without a stacking context
@@ -493,13 +552,23 @@
            focus-visible:outline-gold-500;
   }
 
-  /* Scaled down below 1340px: at full size the 45deg cards close in
-     on the copy in the middle. */
-  @media screen and (max-width: 1339px) {
+  /* Two steps down, because one is not enough at this card size.
+     Each tier keeps the same three clearances positive: side card to
+     copy column, top card to stage edge, and card to card down each
+     side. The padding falls with the scale so the stage does not
+     keep its full-size height while holding smaller cards. */
+  @media screen and (max-width: 1439px) {
     .scatter-stage {
-      padding-block: 390px;
-      min-height: 1080px;
+      padding-block: 520px;
+      min-height: 1380px;
       --scatter-scale: 0.86;
+    }
+  }
+  @media screen and (max-width: 1199px) {
+    .scatter-stage {
+      padding-block: 420px;
+      min-height: 1180px;
+      --scatter-scale: 0.72;
     }
   }
 
@@ -521,8 +590,8 @@
       position: relative;
       left: auto;
       top: auto;
-      width: min(74vw, 290px);
-      height: min(98vw, 386px);
+      width: min(82vw, 330px);
+      height: min(102vw, 412px);
       transform: none;
     }
     .scatter-center {
